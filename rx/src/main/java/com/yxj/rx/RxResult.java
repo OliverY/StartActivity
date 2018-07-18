@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 
 import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.subjects.PublishSubject;
 
 /**
@@ -42,10 +43,17 @@ public class RxResult {
         return (RxResultFragment) activity.getFragmentManager().findFragmentByTag(TAG);
     }
 
-    public Observable<ResultEntity> startActivity(Intent intent){
-        PublishSubject<ResultEntity> subject = PublishSubject.create();
-        rxRequestFragment.startForResult(intent,subject);
-        return subject;
+    public Observable<ResultEntity> startActivity(final Intent intent){
+//        PublishSubject<ResultEntity> subject = PublishSubject.create();
+//        rxRequestFragment.startForResult(intent,subject);
+//        return subject;
+
+        return new Observable(){
+            @Override
+            protected void subscribeActual(Observer observer) {
+                rxRequestFragment.startForResult(intent,observer);
+            }
+        };
     }
 
 }
